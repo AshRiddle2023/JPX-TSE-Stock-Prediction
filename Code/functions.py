@@ -1,4 +1,4 @@
-#分割・逆分割による過去の価格差を小さくするために、AdjustmentFactorの値を用いて、株価を修正する
+#To reduce historical price differences caused by stock splits and reverse splits, the stock prices are adjusted using the value of the AdjustmentFactor.
 def adjust_price(price):
     """
     Args:
@@ -17,9 +17,9 @@ def adjust_price(price):
             df (pd.DataFrame): stock_price with AdjustedClose for a single SecuritiesCode
         """
         # sort data to generate CumulativeAdjustmentFactor
-        df = df.sort_values("Date", ascending=False)#降順(最新のものが先頭)
+        df = df.sort_values("Date", ascending=False) #Descending order (newest items first)
         # generate CumulativeAdjustmentFactor
-        df.loc[:, "CumulativeAdjustmentFactor"] = df["AdjustmentFactor"].cumprod()#cumprodは累積積を求める関数
+        df.loc[:, "CumulativeAdjustmentFactor"] = df["AdjustmentFactor"].cumprod()#cumprod is a function that computes the cumulative product
         # generate AdjustedClose
         df.loc[:, "AdjustedClose"] = (
             df["CumulativeAdjustmentFactor"] * df["Close"]
@@ -27,11 +27,11 @@ def adjust_price(price):
             Decimal(str(x)).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)#四捨五入
         ))
         # reverse order
-        df = df.sort_values("Date")#昇順に戻す
+        df = df.sort_values("Date")#Return to ascending order
         # to fill AdjustedClose, replace 0 into np.nan
         df.loc[df["AdjustedClose"] == 0, "AdjustedClose"] = np.nan
         # forward fill AdjustedClose
-        df.loc[:, "AdjustedClose"] = df.loc[:, "AdjustedClose"].ffill()#ffill:前(上)の値に置換
+        df.loc[:, "AdjustedClose"] = df.loc[:, "AdjustedClose"].ffill()#ffill: replace with the previous (above) value
         return df
 
     # generate AdjustedClose
