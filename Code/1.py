@@ -1,10 +1,10 @@
 # libraries
 import os
-from decimal import ROUND_HALF_UP, Decimal#float型の計算を正確に行うため
+from decimal import ROUND_HALF_UP, Decimal #To perform calculations with float (floating-point) values accurately
 
 import numpy as np
 import pandas as pd
-from tqdm import tqdm#処理状況の可視化
+from tqdm import tqdm #Visualization of processing status
 import warnings
 
 warnings.filterwarnings('ignore')
